@@ -37,6 +37,9 @@ code {
 .text-primary {
   color: #7952b3;
 }
+.bg-primary {
+  background-color: #7952b3;
+}
 /* 
 input[type="range"] {
   -webkit-appearance: none;
@@ -87,4 +90,16 @@ input:focus {
 label {
   font-size: 0.875rem;
   margin-top: 1rem;
+}
+
+.table-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 100px;
+}
+
+.icon_delete {
+  position: absolute;
+  top: 50%;
+  right: 11px;
+  transform: translateY(-50%);
 }
