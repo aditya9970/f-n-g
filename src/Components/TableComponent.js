@@ -1,5 +1,7 @@
+import { motion } from "framer-motion";
 import React, { useContext } from "react";
 import appContext from "../cotext/appContext";
+import { slideInRight } from "../helpers/animation";
 
 const TableComponent = () => {
   const people = [
@@ -27,7 +29,13 @@ const TableComponent = () => {
   const { values, setValues } = useContext(appContext);
 
   return (
-    <div className="py-4">
+    <motion.div
+      className="py-4"
+      variants={slideInRight}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <h1 className="text-3xl text-dark py-8 pt-4">All Feedback</h1>
       <div className="flex flex-col">
         <div className=" overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -107,7 +115,7 @@ const TableComponent = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

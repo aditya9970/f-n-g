@@ -1,8 +1,10 @@
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useContext, useEffect, useState } from "react";
 import appContext from "../cotext/appContext";
 import validator from "../helpers/validator";
+import { slideInLeft } from "../helpers/animation";
 
-const FormComponent = ({ forms, setForms }) => {
+const FormComponent = () => {
   const { values, setValues } = useContext(appContext);
 
   let { temp } = values;
@@ -35,8 +37,14 @@ const FormComponent = ({ forms, setForms }) => {
       },
     });
   };
+
   return (
-    <div>
+    <motion.div
+      variants={slideInLeft}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <h1 className="text-3xl text-dark pt-8 text-blue-700">Aromatic Bar</h1>
 
       <p className="text-gray-400 pb-1	">
@@ -168,7 +176,7 @@ const FormComponent = ({ forms, setForms }) => {
           </div>
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
