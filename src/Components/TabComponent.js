@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import appContext from "../cotext/appContext";
-import TableComponent from "./TableComponent";
 
 const TabComponent = () => {
   const { values, setValues } = useContext(appContext);
