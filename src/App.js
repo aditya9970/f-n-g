@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useReducer, useEffect } from "react";
 import FormComponent from "./Components/FormComponent.";
 import TableComponent from "./Components/TableComponent";
 import appContext from "./cotext/appContext";
@@ -8,8 +8,6 @@ import AlertComponent from "./Components/AlertComponent";
 import TabComponent from "./Components/TabComponent";
 
 function App() {
-  const [tab, setTab] = useState(0);
-
   const [values, setValues] = useReducer(appReducer, {
     index: -1, //index -1 shows new forms
     tab: 0, //tab 0 = forms 1 = table
