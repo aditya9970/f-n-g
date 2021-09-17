@@ -17,7 +17,9 @@ const AlertComponent = () => {
             className=" fixed px-8 py-4 bg-white border pr-4 lg:w-6/12 md:w-8/12 w-full text-center rounded bg-green-500 text-white"
             style={{
               backgroundColor: "rgb(72, 164, 76)",
+              top: 0,
               left: "50%",
+              zIndex: 800,
             }}
             variants={alertAnimation}
             initial="hidden"

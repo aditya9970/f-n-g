@@ -10,13 +10,17 @@ const FormComponent = () => {
   let { temp } = values;
 
   const handleSubmit = (e) => {
-    console.log("submited");
+    //submits performs
     e.preventDefault();
+    //check for valiodations
     if (
       validator("customerName", temp.customerName) &&
       validator("phoneNo", temp.phoneNo) &&
       validator("email", temp.email)
     ) {
+      // add/update darft to the forms & update the local storage to updated forms
+      //-1 is for new forms to be added
+      // !== -1 shows the forms currently under editing
       values.index === -1
         ? setValues({ type: "addForm" })
         : setValues({ type: "updateForm" });
@@ -24,12 +28,13 @@ const FormComponent = () => {
   };
 
   const handleReset = (e) => {
+    //handleReset will clear the draft from local and app's store
     e.preventDefault();
     setValues({ type: "resetTemp" });
   };
 
   const handleChange = (type) => (e) => {
-    console.log("changed", e.target.value);
+    //handlechange will update the draft from local & app's store
     setValues({
       type: "changeTemp",
       payload: {

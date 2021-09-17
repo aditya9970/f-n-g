@@ -1,7 +1,7 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { click, highlight, SlideInBack } from "../helpers/animation";
 
-const ModelComponent = ({ children, handleClose, isOpen }) => {
+const ModalComponent = ({ children, handleClose, isOpen }) => {
   return (
     <>
       <motion.div
@@ -25,9 +25,11 @@ const ModelComponent = ({ children, handleClose, isOpen }) => {
   );
 };
 
-export const DeleteModel = ({ handleDelete, handleClose }) => {
+export const DeleteModal = ({ handleDelete, handleClose }) => {
+  //delete modal asks the user before deleting the form
+  //handleDelete & handleCLose are provided by TableComponent
   return (
-    <ModelComponent handleClose={handleClose}>
+    <ModalComponent handleClose={handleClose}>
       <div className="p-4 px-8 bg-light rounded" style={{ maxWidth: "90vw" }}>
         <p className="pb-6 text-xl">Do you want to delete this form?</p>
         <motion.button
@@ -48,13 +50,15 @@ export const DeleteModel = ({ handleDelete, handleClose }) => {
           Delete
         </motion.button>
       </div>
-    </ModelComponent>
+    </ModalComponent>
   );
 };
 
-export const PreviewModel = ({ handleClose, data }) => {
+export const PreviewModal = ({ handleClose, data }) => {
+  //preview modal shows the user full preivew of the form
+  // handleCLose is provided by TableComponent to close the modal
   return (
-    <ModelComponent handleClose={handleClose}>
+    <ModalComponent handleClose={handleClose}>
       <div
         className="p-4 px-8 bg-light rounded flex-row lg:flex-col relative"
         style={{ maxWidth: "90vw" }}
@@ -116,8 +120,8 @@ export const PreviewModel = ({ handleClose, data }) => {
           </div>
         </div>
       </div>
-    </ModelComponent>
+    </ModalComponent>
   );
 };
 
-export default ModelComponent;
+export default ModalComponent;

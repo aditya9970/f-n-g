@@ -2,7 +2,7 @@ import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import React, { useContext, useEffect, useState } from "react";
 import appContext from "../cotext/appContext";
 import { slideInRight } from "../helpers/animation";
-import { DeleteModel, PreviewModel } from "./ModelComponent";
+import { DeleteModal, PreviewModal } from "./ModalComponent";
 
 const TableComponent = () => {
   const controls = useAnimation();
@@ -23,23 +23,92 @@ const TableComponent = () => {
   const handleDelete = (i) => (e) => {
     e.stopPropagation();
 
-    setDeleteModel({ ...deleteModel, isOpen: !deleteModel.isOpen, index: i });
+    setDeleteModal({ ...deleteModal, isOpen: !deleteModal.isOpen, index: i });
   };
   const { values, setValues } = useContext(appContext);
-  const [deleteModel, setDeleteModel] = useState({ isOpen: false, index: -1 });
-  const [previewModel, setPreviewModel] = useState({
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, index: -1 });
+  const [previewModal, setPreviewModal] = useState({
     isOpen: false,
     index: -1,
   });
 
   const togglePreview = (i) => {
-    console.log("toggling the preview");
-    setPreviewModel({
-      ...previewModel,
-      isOpen: !previewModel.isOpen,
-      index: previewModel.isOpen ? -1 : i,
+    setPreviewModal({
+      ...previewModal,
+      isOpen: !previewModal.isOpen,
+      index: previewModal.isOpen ? -1 : i,
     });
   };
+
+  function empty() {
+    if (values.forms.length === 0)
+      return (
+        <div className="text-sm text-gray-400 text-center py-4">
+          Looks like list is Empty.
+          <br /> Go to form tab to create an entry
+        </div>
+      );
+  }
+
+  function tableRow(form, i) {
+    return (
+      <motion.tr
+        key={i}
+        custom={i + 1}
+        animate={controls}
+        initial={{ opacity: 0 }}
+        whileHover={{
+          translate: "5px",
+        }}
+        exit={{
+          opacity: 0,
+        }}
+        onClick={() => togglePreview(i)}
+        className="p-0 m-0"
+      >
+        <td className="px-6 pl-3 py-4 whitespace-nowrap">
+          <div className="flex items-center">
+            <div className="">
+              <div className="text-sm font-medium text-gray-900">
+                {form.customerName}
+              </div>
+            </div>
+          </div>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div className="text-sm text-gray-900">{form.phoneNo}</div>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-gray-500">
+          {form.question4}/5
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {form.email}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+          <motion.i
+            class="fas fa-edit mx-2 "
+            onClick={handleEdit(i)}
+          ></motion.i>
+          <motion.i
+            class="fas fa-ban mx-2 "
+            onClick={handleDelete(i)}
+          ></motion.i>
+        </td>
+      </motion.tr>
+    );
+  }
+
+  function emptyRow() {
+    return (
+      <tr>
+        <td>&nbsp;</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    );
+  }
 
   return (
     <motion.div
@@ -50,29 +119,30 @@ const TableComponent = () => {
       exit="exit"
     >
       <AnimatePresence initial={false} exitBeforeEnter={true}>
-        {previewModel.isOpen && (
-          <PreviewModel
+        {previewModal.isOpen && (
+          <PreviewModal
             handleClose={togglePreview}
-            data={previewModel.isOpen && values.forms[previewModel.index]}
+            data={previewModal.isOpen && values.forms[previewModal.index]}
           />
         )}
-        {deleteModel.isOpen && (
-          <DeleteModel
+        {deleteModal.isOpen && (
+          <DeleteModal
             handleClose={() => {
-              console.log("closing model");
-              setDeleteModel({ ...deleteModel, isOpen: !deleteModel.isOpen });
+              setDeleteModal({ ...deleteModal, isOpen: !deleteModal.isOpen });
             }}
             handleDelete={() => {
               setValues({
                 type: "deleteForm",
-                payload: deleteModel.index,
+                payload: deleteModal.index,
               });
-              setDeleteModel({ ...deleteModel, isOpen: !deleteModel.isOpen });
+              setDeleteModal({ ...deleteModal, isOpen: !deleteModal.isOpen });
             }}
           />
         )}
       </AnimatePresence>
-      <h1 className="text-3xl text-dark py-8 pt-4">All Feedback</h1>
+      <h1 className="text-3xl text-dark py-8 pt-4 stickyheaders">
+        All Feedback
+      </h1>
       <div className="flex flex-col">
         <div className=" overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -110,56 +180,13 @@ const TableComponent = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {values.forms &&
-                    values.forms.map((form, i) => (
-                      <motion.tr
-                        key={i}
-                        custom={i + 1}
-                        animate={controls}
-                        initial={{ opacity: 0 }}
-                        whileHover={{
-                          translate: "5px",
-                        }}
-                        exit={{
-                          opacity: 0,
-                        }}
-                        onClick={() => togglePreview(i)}
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">
-                                {form.customerName}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {form.phoneNo}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-500">
-                          {form.question4}/5
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {form.email}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <motion.i
-                            class="fas fa-edit mx-2 "
-                            onClick={handleEdit(i)}
-                          ></motion.i>
-                          <motion.i
-                            class="fas fa-ban mx-2 "
-                            onClick={handleDelete(i)}
-                          ></motion.i>
-                        </td>
-                      </motion.tr>
-                    ))}
+                  {values.forms && values.forms.length !== 0
+                    ? values.forms.map((form, i) => tableRow(form, i))
+                    : emptyRow()}
                 </tbody>
               </table>
             </div>
+            {empty()}
           </div>
         </div>
       </div>

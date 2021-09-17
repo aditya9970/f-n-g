@@ -1,19 +1,18 @@
 import React, { useState, useReducer, useEffect } from "react";
-import Tab from "./Components/Tab";
 import FormComponent from "./Components/FormComponent.";
 import TableComponent from "./Components/TableComponent";
 import appContext from "./cotext/appContext";
 import appReducer from "./reducer/appReducer";
 import { AnimatePresence } from "framer-motion";
 import AlertComponent from "./Components/AlertComponent";
-import ModelComponent from "./Components/ModelComponent";
+import TabComponent from "./Components/TabComponent";
 
 function App() {
   const [tab, setTab] = useState(0);
 
   const [values, setValues] = useReducer(appReducer, {
-    index: -1,
-    tab: 0,
+    index: -1, //index -1 shows new forms
+    tab: 0, //tab 0 = forms 1 = table
     temp: {
       customerName: "",
       phoneNo: "",
@@ -23,27 +22,30 @@ function App() {
       question3: 3,
       question4: 3,
     },
-    forms: [],
-    alert: "",
+    forms: [], //collection of all submited forms
+    alert: "", //alert after performing actions
   });
 
   useEffect(() => {
-    console.log(localStorage.getItem("forms"));
+    //load locally stored forms when mounting app to the app's store
     localStorage.getItem("forms") &&
       setValues({
         type: "loadForm",
       });
-
+    //load locally stored draft form when mounting app to the app's store
     localStorage.getItem("temp") &&
       setValues({
         type: "loadTemp",
       });
   }, []);
   return (
+    //appcontext will provide actions & global state to the components inside
+    //alert component is fixed to the top and and only rendered when alrts are available
+    //AnimatePresence will help retain the component till exit animations are done
     <appContext.Provider value={{ values, setValues }}>
-      <div className="App bg-light">
+      <div className="App bg-light pt-14">
         <AlertComponent />
-        <Tab />
+        <TabComponent />
         <div className="container mx-auto">
           <div className="main px-5">
             <AnimatePresence initial={false} exitBeforeEnter={true}>

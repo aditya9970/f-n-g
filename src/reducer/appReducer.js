@@ -1,5 +1,7 @@
+//appReducer contains all actions taken for internal store & localstorage
+
 const appReducer = (state, action) => {
-  console.log({ type: action.type });
+  //appReducer returns the updated state(app's store) based on type of action & payload provided
   switch (action.type) {
     case "loadForm":
       return {
@@ -7,7 +9,6 @@ const appReducer = (state, action) => {
         forms: JSON.parse(localStorage.getItem("forms")),
       };
     case "loadTemp":
-      console.log("loading Temp");
       return {
         ...state,
         temp: JSON.parse(localStorage.getItem("temp")),
@@ -42,7 +43,6 @@ const appReducer = (state, action) => {
     case "updateForm":
       state.forms[state.index] = state.temp;
       localStorage.setItem("forms", JSON.stringify(state.forms));
-      console.log("updating", state, action.payload);
       return {
         ...state,
         temp: {
@@ -59,12 +59,10 @@ const appReducer = (state, action) => {
       };
 
     case "deleteForm":
-      console.log("im deleting");
       let temp = [];
       state.forms.forEach((item, i) => {
         i !== action.payload && temp.push(item);
       });
-      console.log({ index: action.payload, temp });
       localStorage.setItem("forms", JSON.stringify(state.forms));
       return {
         ...state,

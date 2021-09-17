@@ -25,6 +25,10 @@ code {
 
 .Tab {
   box-shadow: 0px 2px 2px #00000029;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 500;
 }
 .selected {
   border-bottom: solid 2px #7952b3;

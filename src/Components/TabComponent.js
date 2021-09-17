@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import appContext from "../cotext/appContext";
+import TableComponent from "./TableComponent";
 
-const Tab = () => {
+const TabComponent = () => {
   const { values, setValues } = useContext(appContext);
   let { tab } = values;
   return (
@@ -30,4 +31,4 @@ const Tab = () => {
   );
 };
 
-export default Tab;
+export default TabComponent;
