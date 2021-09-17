@@ -81,7 +81,7 @@ This is an example of how to list things you need to use the software and how to
 <!-- USAGE EXAMPLES -->
 ## Usage
 
- App is designed to take feedback from the user. A single user maybe provide multiple feedback (updated). 
+ App is designed to take feedback from the user. A single user may provide multiple feedback (updated). 
  User need to provided appropriated contact information and rating based on multiple parameters out of 5
  Tab section can be use to delete/update the feedback provided by user.
 
