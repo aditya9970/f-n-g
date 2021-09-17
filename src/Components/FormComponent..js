@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import appContext from "../cotext/appContext";
 import validator from "../helpers/validator";
-import { slideInLeft } from "../helpers/animation";
+import { click, highlight, item, slideInLeft } from "../helpers/animation";
 
 const FormComponent = () => {
   const { values, setValues } = useContext(appContext);
@@ -33,10 +33,13 @@ const FormComponent = () => {
     setValues({
       type: "changeTemp",
       payload: {
-        [e.target.name]: type === "range" ? e.target.value * 1 : e.target.value,
+        [e.target.name]:
+          type === "range" ? (e.target.value * 1) / 10 : e.target.value,
       },
     });
   };
+
+  useEffect(() => {}, [values.temp.question1]);
 
   return (
     <motion.div
@@ -58,33 +61,48 @@ const FormComponent = () => {
             <div className="p-4 text-left flex-1">
               <label for="customerName">
                 Name
-                <span className=" mx-2  text-red-600  text-xs">
-                  {`${
-                    !validator("customerName", temp.customerName)
-                      ? "Name entered is not valid"
-                      : ""
-                  } `}
-                </span>
+                <AnimatePresence initial={false} exitBeforeEnter={true}>
+                  {!validator("customerName", temp.customerName) && (
+                    <motion.span
+                      className=" mx-2  text-red-600  text-xs"
+                      variants={item}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
+                      (Name entered is not valid)
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </label>
-              <input
+              <motion.input
                 type="text"
+                className="input"
                 id="customerName"
                 name="customerName"
                 placeholder="Eg: Adam Fox"
                 onChange={handleChange("string")}
                 value={temp.customerName}
+                whileFocus={highlight}
+                whileHover={highlight}
               />
               <label for="phoneNo ">
-                Phone No{" "}
-                <span className=" mx-2  text-red-600  text-xs">
-                  {`${
-                    !validator("phoneNo", temp.phoneNo)
-                      ? "Phone no entered is not valid"
-                      : ""
-                  } `}
-                </span>
+                Phone No
+                <AnimatePresence initial={false} exitBeforeEnter={true}>
+                  {!validator("phoneNo", temp.phoneNo) && (
+                    <motion.span
+                      className=" mx-2  text-red-600  text-xs"
+                      variants={item}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
+                      (Phone no entered is not valid)
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </label>
-              <input
+              <motion.input
                 className="input"
                 type="tel"
                 id="phoneNo"
@@ -92,18 +110,24 @@ const FormComponent = () => {
                 placeholder="Eg: 9922002283"
                 onChange={handleChange("string")}
                 value={temp.phoneNo}
+                whileFocus={highlight}
+                whileHover={highlight}
               />
               <label for="email">
-                Email ID{" "}
-                <span className=" mx-2  text-red-600  text-xs">
-                  {`${
-                    !validator("email", temp.email)
-                      ? "Email entered is not valid"
-                      : ""
-                  } `}
-                </span>
+                Email ID
+                {!validator("email", temp.email) && (
+                  <motion.span
+                    className=" mx-2  text-red-600  text-xs"
+                    variants={item}
+                    hidden="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    (Email entered is not valid)
+                  </motion.span>
+                )}
               </label>
-              <input
+              <motion.input
                 className="input"
                 type="email"
                 id="email"
@@ -111,68 +135,94 @@ const FormComponent = () => {
                 value={temp.email}
                 placeholder="Eg : Example@mail.com"
                 onChange={handleChange("string")}
+                whileFocus={highlight}
+                whileHover={highlight}
               />
             </div>
             <div className=" flex-1 p-4  text-left">
-              <p className="pt-1">
-                Quality of the service you received from your Host.
-              </p>
+              <div className="flex pr-4">
+                <p className="pt-1 inline-block">
+                  Quality of the service you received from your Host.
+                </p>
+                <span className="ml-auto inline-block">{temp.question1}/5</span>
+              </div>
               <div>
-                <input
+                <motion.input
+                  whileHover={highlight}
                   type="range"
-                  value={temp.question1}
-                  min="0"
-                  max="5"
+                  className="range"
+                  value={temp.question1 * 10}
+                  min="10"
+                  max="50"
                   name="question1"
                   onChange={handleChange("range")}
                 />
               </div>
-              <p>Quality of your Beverage.</p>
-              <input
+              <div className="flex pr-4">
+                <p>Quality of your Beverage.</p>
+                <motion.span className="ml-auto inline-block">
+                  {temp.question2}/5
+                </motion.span>
+              </div>
+              <motion.input
+                whileHover={highlight}
                 type="range"
-                value={temp.question2}
-                min="0"
-                max="5"
+                className="range"
+                value={temp.question2 * 10}
+                min="10"
+                max="50"
                 name="question2"
                 onChange={handleChange("range")}
               />
-
-              <p>Cleanlines of our Restaurant</p>
-              <input
+              <div className="flex pr-4">
+                <p>Cleanlines of our Restaurant</p>
+                <span className="ml-auto inline-block">{temp.question3}/5</span>
+              </div>
+              <motion.input
+                whileHover={highlight}
                 type="range"
-                value={temp.question3}
-                min="0"
-                max="5"
+                className="range"
+                value={temp.question3 * 10}
+                min="10"
+                max="50"
                 name="question3"
                 onChange={handleChange("range")}
               />
-
-              <p>Your overall Experience</p>
-              <input
+              <div className="flex pr-4">
+                <p>Your overall Experience</p>
+                <span className="ml-auto inline-block">{temp.question4}/5</span>
+              </div>
+              <motion.input
+                whileHover={highlight}
                 type="range"
-                value={temp.question4}
-                min="0"
-                max="5"
+                className="range"
+                value={temp.question4 * 10}
+                min="10"
+                max="50"
                 name="question4"
                 onChange={handleChange("range")}
               />
             </div>
           </div>
           <div className="w-100">
-            <button
+            <motion.button
+              whileHover={highlight}
+              whileTap={click}
               className="px-6 py-2 rounded text-white m-2 mr-auto "
               style={{ color: "#48A44C" }}
               type="reset"
             >
               Reset
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={highlight}
+              whileTap={click}
               className="px-6 py-2 rounded text-white m-2 mr-auto "
               style={{ backgroundColor: "#48A44C" }}
               type="submit"
             >
-              Submit
-            </button>
+              {values.index === -1 ? "Submit" : "Update"}
+            </motion.button>
           </div>
         </form>
       </div>

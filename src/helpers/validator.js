@@ -8,7 +8,7 @@ const validator = (name, value) => {
       if (/^[A-Za-z\s]+$/.test(value)) return true;
       else return false;
     case "phoneNo":
-      if (/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(value))
+      if (/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/.test(value))
         return true;
       else return false;
     default:

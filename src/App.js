@@ -5,6 +5,8 @@ import TableComponent from "./Components/TableComponent";
 import appContext from "./cotext/appContext";
 import appReducer from "./reducer/appReducer";
 import { AnimatePresence } from "framer-motion";
+import AlertComponent from "./Components/AlertComponent";
+import ModelComponent from "./Components/ModelComponent";
 
 function App() {
   const [tab, setTab] = useState(0);
@@ -40,15 +42,16 @@ function App() {
   return (
     <appContext.Provider value={{ values, setValues }}>
       <div className="App bg-light">
-        <AnimatePresence initial={false} exitBeforeEnter={true}>
-          <Tab />
-          <div className="container mx-auto">
-            <div className="main px-5">
+        <AlertComponent />
+        <Tab />
+        <div className="container mx-auto">
+          <div className="main px-5">
+            <AnimatePresence initial={false} exitBeforeEnter={true}>
               {values.tab === 0 && <FormComponent />}
               {values.tab === 1 && <TableComponent />}
-            </div>
+            </AnimatePresence>
           </div>
-        </AnimatePresence>
+        </div>
       </div>
     </appContext.Provider>
   );

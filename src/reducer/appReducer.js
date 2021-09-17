@@ -1,5 +1,5 @@
-import validator from "../helpers/validator";
 const appReducer = (state, action) => {
+  console.log({ type: action.type });
   switch (action.type) {
     case "loadForm":
       return {
@@ -66,7 +66,11 @@ const appReducer = (state, action) => {
       });
       console.log({ index: action.payload, temp });
       localStorage.setItem("forms", JSON.stringify(state.forms));
-      return { ...state, forms: temp };
+      return {
+        ...state,
+        forms: temp,
+        alert: "Feedback Deleted Successfully",
+      };
 
     case "changeTab":
       return { ...state, tab: action.payload };
@@ -96,7 +100,6 @@ const appReducer = (state, action) => {
           question4: 3,
         },
         index: -1,
-        alert: "Feedback Updated Successfully",
       };
     case "changeTemp":
       localStorage.setItem(
@@ -112,8 +115,10 @@ const appReducer = (state, action) => {
           ...state.temp,
           ...action.payload,
         },
+        alert: "",
       };
-
+    case "closeAlert":
+      return { ...state, alert: "" };
     default:
       return state;
   }

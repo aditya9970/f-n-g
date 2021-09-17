@@ -1,32 +1,45 @@
-import { motion } from "framer-motion";
-import React, { useContext } from "react";
+import { AnimatePresence, motion, useAnimation } from "framer-motion";
+import React, { useContext, useEffect, useState } from "react";
 import appContext from "../cotext/appContext";
 import { slideInRight } from "../helpers/animation";
+import { DeleteModel, PreviewModel } from "./ModelComponent";
 
 const TableComponent = () => {
-  const people = [
-    {
-      name: "Jane Cooper",
-      title: "Regional Paradigm Technician",
-      department: "Optimization",
-      role: "Admin",
-      email: "jane.cooper@example.com",
-      image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-    },
-    // More people...
-  ];
+  const controls = useAnimation();
+
+  useEffect(() => {
+    controls.start((i) => ({
+      opacity: 1,
+      x: 10,
+      transition: { delay: i * 0.1, duration: 1 },
+    }));
+  }, []);
 
   const handleEdit = (i) => (e) => {
     e.preventDefault();
-    // e.preventPropogation();
+    e.stopPropagation();
     setValues({ type: "editForm", payload: i });
   };
   const handleDelete = (i) => (e) => {
-    e.preventDefault();
-    setValues({ type: "deleteForm", payload: i });
+    e.stopPropagation();
+
+    setDeleteModel({ ...deleteModel, isOpen: !deleteModel.isOpen, index: i });
   };
   const { values, setValues } = useContext(appContext);
+  const [deleteModel, setDeleteModel] = useState({ isOpen: false, index: -1 });
+  const [previewModel, setPreviewModel] = useState({
+    isOpen: false,
+    index: -1,
+  });
+
+  const togglePreview = (i) => {
+    console.log("toggling the preview");
+    setPreviewModel({
+      ...previewModel,
+      isOpen: !previewModel.isOpen,
+      index: previewModel.isOpen ? -1 : i,
+    });
+  };
 
   return (
     <motion.div
@@ -36,6 +49,29 @@ const TableComponent = () => {
       animate="visible"
       exit="exit"
     >
+      <AnimatePresence initial={false} exitBeforeEnter={true}>
+        {previewModel.isOpen && (
+          <PreviewModel
+            handleClose={togglePreview}
+            data={previewModel.isOpen && values.forms[previewModel.index]}
+          />
+        )}
+        {deleteModel.isOpen && (
+          <DeleteModel
+            handleClose={() => {
+              console.log("closing model");
+              setDeleteModel({ ...deleteModel, isOpen: !deleteModel.isOpen });
+            }}
+            handleDelete={() => {
+              setValues({
+                type: "deleteForm",
+                payload: deleteModel.index,
+              });
+              setDeleteModel({ ...deleteModel, isOpen: !deleteModel.isOpen });
+            }}
+          />
+        )}
+      </AnimatePresence>
       <h1 className="text-3xl text-dark py-8 pt-4">All Feedback</h1>
       <div className="flex flex-col">
         <div className=" overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -76,7 +112,19 @@ const TableComponent = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {values.forms &&
                     values.forms.map((form, i) => (
-                      <tr key={i}>
+                      <motion.tr
+                        key={i}
+                        custom={i + 1}
+                        animate={controls}
+                        initial={{ opacity: 0 }}
+                        whileHover={{
+                          translate: "5px",
+                        }}
+                        exit={{
+                          opacity: 0,
+                        }}
+                        onClick={() => togglePreview(i)}
+                      >
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="ml-4">
@@ -98,16 +146,16 @@ const TableComponent = () => {
                           {form.email}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <i
+                          <motion.i
                             class="fas fa-edit mx-2 "
                             onClick={handleEdit(i)}
-                          ></i>
-                          <i
+                          ></motion.i>
+                          <motion.i
                             class="fas fa-ban mx-2 "
                             onClick={handleDelete(i)}
-                          ></i>
+                          ></motion.i>
                         </td>
-                      </tr>
+                      </motion.tr>
                     ))}
                 </tbody>
               </table>
